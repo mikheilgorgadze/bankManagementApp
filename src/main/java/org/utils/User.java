@@ -8,13 +8,13 @@ import java.util.HashSet;
 
 public abstract class User {
     private String username;
-    private static HashSet<String> usernames = new HashSet<>();
+    private static final HashSet<String> usernames = new HashSet<>();
     private String firstName;
     private String lastName;
     private Integer age;
     private Gender gender;
     private String company;
-    private ArrayList<Account> accounts = new ArrayList<>();
+    private final ArrayList<Account> accounts = new ArrayList<>();
     private int accountCount = 0;
 
     public User(String username, String firstName, String lastName){

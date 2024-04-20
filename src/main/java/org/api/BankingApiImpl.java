@@ -299,7 +299,7 @@ public class BankingApiImpl implements BankingApi{
 
     @Override
     public void printUsers() {
-        db.getUsers().forEach(user -> printUser(user));
+        db.getUsers().forEach(this::printUser);
     }
 
     @Override
@@ -344,7 +344,7 @@ public class BankingApiImpl implements BankingApi{
 
     private void validatePermission(Permission permission){
         if(!db.getPermissions().contains(permission) || permission == null){
-            throw new PermissionNotFound("Permission " + permission.name() + " not found!");
+            throw new PermissionNotFound("Permission not found!");
         }
     }
 

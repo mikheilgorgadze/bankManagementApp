@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class AcctIdGenerator {
     private static Long sequence = 1000L;
-    private static Set<Long> existingAccountIds = new HashSet<>();
+    private static final Set<Long> existingAccountIds = new HashSet<>();
 
 
     public static Long generateAcctId(){

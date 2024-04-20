@@ -4,10 +4,7 @@ import org.api.BankingApiImpl;
 import org.exceptions.*;
 import org.security.Permission;
 import org.security.Role;
-import org.structs.Gender;
-import org.structs.MethodsMenuItem;
-import org.structs.UpdateField;
-import org.structs.UserCategory;
+import org.structs.*;
 import org.utils.Account;
 import org.utils.MyArrayList;
 import org.utils.User;
@@ -16,7 +13,10 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import static org.utils.StyleText.colorCodeString;
+
 public class MenuHandler {
+
     private static final Scanner userInput = new Scanner(System.in);
     private static final BankingApiImpl api = new BankingApiImpl();
 
@@ -44,7 +44,7 @@ public class MenuHandler {
         try{
             api.addUser(username, firstName, lastName, age, gender, company, userCategory);
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ public class MenuHandler {
         String username = getValueFromPrompt("Enter username: ", String.class);
         User user = api.getUser(username);
         if (user == null){
-            System.out.println("User with username: " + username + " not found.");
+            ErrorHandler.printError("User with username: " + username + " not found.");
             return;
         }
         api.printUser(user);
@@ -87,10 +87,10 @@ public class MenuHandler {
             try {
                 api.updateUser(user, field, value);
             } catch (Exception e){
-                System.out.println(e.getMessage());
+                ErrorHandler.printError(e.getMessage());
             }
         } else {
-            System.out.println("User not found");
+            ErrorHandler.printError("User not found");
         }
     }
 
@@ -101,7 +101,7 @@ public class MenuHandler {
         try{
             api.removeUser(user);
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -111,12 +111,12 @@ public class MenuHandler {
         try {
             MyArrayList<Role> roles = api.loadRoles(filePath);
             if (roles == null){
-                System.out.println("Roles couldn't be loaded");
+                ErrorHandler.printError("Roles couldn't be loaded");
             } else {
-                System.out.println("Roles loaded successfully");
+                ErrorHandler.printSuccess("Roles loaded successfully");
             }
         } catch (InvalidFileException e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -126,12 +126,12 @@ public class MenuHandler {
         try{
             MyArrayList<Permission> permissions = api.loadPermissions(filePath);
             if (permissions == null){
-                System.out.println("Permissions couldn't be loaded");
+                ErrorHandler.printError("Permissions couldn't be loaded");
             } else {
-                System.out.println("Permissions added successfully");
+                ErrorHandler.printSuccess("Permissions added successfully");
             }
         } catch (InvalidFileException e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -151,7 +151,7 @@ public class MenuHandler {
         String roleName = getValueFromPrompt("Enter a role name: ", String.class);
         Role role = api.getRole(roleName);
         if (role == null){
-            System.out.println("Role not found");
+            ErrorHandler.printError("Role not found");
             return;
         } else {
             System.out.println("Role: " + role.name());
@@ -160,7 +160,7 @@ public class MenuHandler {
         try{
             api.updateRole(role, newRoleName);
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -170,9 +170,9 @@ public class MenuHandler {
         Role role = api.getRole(roleName);
         try{
             api.removeRole(role);
-            System.out.println("Role removed successfully");
+            ErrorHandler.printSuccess("Role removed successfully");
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -192,7 +192,7 @@ public class MenuHandler {
         String permissionName = getValueFromPrompt("Enter existing permission name: ", String.class);
         Permission permission = api.getPermission(permissionName);
         if(permission == null){
-            System.out.println("Permission does not exist");
+            ErrorHandler.printError("Permission does not exist");
         } else {
             System.out.println("Permission: " + permission.name());
         }
@@ -200,9 +200,9 @@ public class MenuHandler {
         String newPermissionName = getValueFromPrompt("Enter new permission name: ", String.class);
         try{
             api.updatePermission(permission, newPermissionName);
-            System.out.println("Permission updated successfully");
+            ErrorHandler.printSuccess("Permission updated successfully");
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -212,9 +212,9 @@ public class MenuHandler {
         Permission permission = api.getPermission(permissionName);
         try{
             api.removePermission(permission);
-            System.out.println("Permission removed successfully");
+            ErrorHandler.printSuccess("Permission removed successfully");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -226,7 +226,7 @@ public class MenuHandler {
             Long acctId = api.addAccountToUser(user);
             System.out.println("Account ID for new account is: " + acctId);
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
 
@@ -236,11 +236,11 @@ public class MenuHandler {
         Long acctId = getValueFromPrompt("Enter account ID: ", Long.class);
         User user = api.getUser(username);
         if (user == null){
-            System.out.println("User not found");
+            ErrorHandler.printError("User not found");
         } else {
             Account account = api.getAccount(user, acctId);
             if (account == null){
-                System.out.println("Account does not exist!");
+                ErrorHandler.printError("Account does not exist!");
             } else {
                 System.out.println("------------------------------------");
                 System.out.println("User credentials: " + user.getFirstName() + " " + user.getLastName());
@@ -261,13 +261,13 @@ public class MenuHandler {
             Long acctId = getValueFromPrompt("Enter account ID: ", Long.class);
             Account account = api.getAccount(user, acctId);
             if (account == null){
-                System.out.println("Account does not exist!");
+                ErrorHandler.printError("Account does not exist!");
             } else {
                 try {
                     api.removeAccountFromUser(user, acctId);
-                    System.out.println("Account removed successfully");
+                    ErrorHandler.printSuccess("Account removed successfully");
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    ErrorHandler.printError(e.getMessage());
                 }
             }
         }
@@ -279,14 +279,14 @@ public class MenuHandler {
         String roleName = getValueFromPrompt("Enter role name: ", String.class);
         Role role = api.getRole(roleName);
         if (role == null){
-            System.out.println("Role not found");
+            ErrorHandler.printError("Role not found");
         } else {
             HashSet<Permission> permissions = api.getPermissionsByRoleName(role);
             if (permissions == null){
-                System.out.println("Permissions not found for this role");
+                ErrorHandler.printError("Permissions not found for this role");
             } else {
                 System.out.println(permissions.stream()
-                        .map(permission -> permission.name())
+                        .map(Permission::name)
                         .collect(Collectors.joining(", ", "[", "]")));
             }
 
@@ -297,7 +297,7 @@ public class MenuHandler {
         String roleName = getValueFromPrompt("Enter role name: ", String.class);
         Role role = api.getRole(roleName);
         if (role == null){
-            System.out.println("Role not found");
+            ErrorHandler.printError("Role not found");
         } else {
             MyArrayList<Permission> permissions = new MyArrayList<>();
             boolean askForPermission = true;
@@ -313,14 +313,14 @@ public class MenuHandler {
                     String permissionName = getValueFromPrompt("Enter permission name: ", String.class);
                     Permission permission = api.getPermission(permissionName);
                     if (permission == null){
-                        System.out.println("Permission with this name not found");
+                        ErrorHandler.printError("Permission with this name not found");
                         continue;
                     }
                     permissions.add(permission);
                 }
             }
             api.addPermissionsToRole(role, permissions);
-            System.out.println("Permissions added successfully");
+            ErrorHandler.printSuccess("Permissions added successfully");
         }
     }
 
@@ -329,12 +329,12 @@ public class MenuHandler {
         String roleName = getValueFromPrompt("Enter role name: ", String.class);
         Role role = api.getRole(roleName);
         if (role == null){
-            System.out.println("Role not found");
+            ErrorHandler.printError("Role not found");
         } else {
             try{
                 api.removePermissionsFromRole(role);
             } catch (InvalidRole e){
-                System.out.println(e.getMessage());
+                ErrorHandler.printError(e.getMessage());
             }
         }
     }
@@ -351,14 +351,14 @@ public class MenuHandler {
         String username = getValueFromPrompt("Enter username: ", String.class);
         User user = api.getUser(username);
         if (user == null){
-            System.out.println("User not found");
+            ErrorHandler.printError("User not found");
             return;
         }
 
         String roleName = getValueFromPrompt("Enter role name: ", String.class);
         Role role = api.getRole(roleName);
         if (role == null){
-            System.out.println("Role not found");
+            ErrorHandler.printError("Role not found");
             return;
         }
 
@@ -369,7 +369,7 @@ public class MenuHandler {
                 api.removeUserRole(user, role);
             }
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            ErrorHandler.printError(e.getMessage());
         }
     }
     public static void deposit(){
@@ -389,20 +389,20 @@ public class MenuHandler {
         try{
             if (action.equals("deposit")){
                 if (api.deposit(username, accountId, amount, username)){
-                    System.out.println("Deposited successfully");
+                    ErrorHandler.printSuccess("Deposited successfully");
                 } else {
-                    System.out.println("Amount is less than 0 or exceeds maximum deposit limit");
+                    ErrorHandler.printError("Amount is less than 0 or exceeds maximum deposit limit");
                 }
 
             } else if (action.equals("withdraw")) {
                 if (api.withdrawFunds(username, accountId, amount, username)){
-                    System.out.println("Withdrew successfully");
+                    ErrorHandler.printSuccess("Withdrew successfully");
                 } else {
-                    System.out.println("Amount is less than 0 or exceeds maximum withdrawal limit");
+                    ErrorHandler.printError("Amount is less than 0 or exceeds maximum withdrawal limit");
                 }
             }
         } catch (Exception e){
-            ExceptionHandling.handleException(e, username);
+            ErrorHandler.handleException(e, username);
         }
     }
 
@@ -417,12 +417,12 @@ public class MenuHandler {
         try {
             boolean result = api.transferFunds(senderUsername, receiverUsername, senderAccountId, receiverAccountId, amount);
             if (result){
-                System.out.println(amount + " GEL successfully transferred from " + senderAccountId + " to " + receiverAccountId);
+                ErrorHandler.printSuccess(amount + " GEL successfully transferred from " + senderAccountId + " to " + receiverAccountId);
             } else {
-                System.out.println("Could not transfer money");
+                ErrorHandler.printError("Could not transfer money");
             }
         } catch (Exception e){
-            ExceptionHandling.handleException(e);
+            ErrorHandler.handleException(e);
         }
 
     }
@@ -444,10 +444,10 @@ public class MenuHandler {
                     value = type.cast(getGender());
                 }
                 else {
-                    System.out.println("Wrong type!");
+                    ErrorHandler.printWarning("Wrong type!");
                 }
             } catch (NumberFormatException e){
-                System.out.println("Invalid input. Please enter a valid " + type.getSimpleName());
+                ErrorHandler.printWarning("Invalid input. Please enter a valid " + type.getSimpleName());
             }
         } while (value == null);
 
@@ -529,12 +529,14 @@ public class MenuHandler {
             userInput.nextLine();
             return enumClass.getEnumConstants()[selection - 1];
         }catch (Exception e){
-            System.out.println("Invalid selection, please try again!");
+            ErrorHandler.printWarning("Invalid selection, please try again!");
             userInput.nextLine();
             return selectEnum(enumClass, message);
         }
     }
     private static void  menuItemHeader(String header){
-        System.out.println("--" + header.toUpperCase() + "--");
+        System.out.println(colorCodeString("--"+ header.toUpperCase() + "--", Color.GREEN));
     }
+
+
 }

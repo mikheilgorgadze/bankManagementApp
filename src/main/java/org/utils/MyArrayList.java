@@ -94,7 +94,7 @@ public class MyArrayList<T> implements MyList<T>{
         if (index < 0 || index >= curSize){
             throw new IndexOutOfBoundsException("Index out of range");
         }
-        Object[] newArr = new Object[curSize - 1];
+        Object[] newArr = new Object[maxSize - 1];
         for (int i = 0; i < curSize; i++) {
             if (i < index) {
                 newArr[i] = arr[i];
