@@ -384,7 +384,7 @@ public class MenuHandler {
     private static void depositOrWithdrawFunds(String action){
         String username = getValueFromPrompt("Enter username: ",  String.class);
         Long accountId = getValueFromPrompt("Enter account ID: ", Long.class);
-        Double amount = getValueFromPrompt("Enter amount to deposit: ", Double.class);
+        Double amount = getValueFromPrompt("Enter amount to " + action + ": ", Double.class);
 
         try{
             if (action.equals("deposit")){

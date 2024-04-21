@@ -15,9 +15,9 @@ import java.util.HashSet;
 
 public class DatabaseSimulation {
     private static Long maxAcctId;
-    private MyArrayList<User> users = new MyArrayList<>();
-    private MyArrayList<Role> roles = new MyArrayList<>();
-    private MyArrayList<Permission> permissions = new MyArrayList<>();
+    private final MyArrayList<User> users = new MyArrayList<>();
+    private final MyArrayList<Role> roles = new MyArrayList<>();
+    private final MyArrayList<Permission> permissions = new MyArrayList<>();
 
     public class RolePermissionLink{
         private static final HashMap<Role, HashSet<Permission>> roleToPermission = new HashMap<>();
