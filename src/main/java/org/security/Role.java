@@ -1,10 +1,6 @@
 package org.security;
 
 
-import org.utils.User;
-
-import java.util.ArrayList;
-
 public class Role {
     private String role;
 

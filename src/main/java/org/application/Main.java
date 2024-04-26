@@ -1,5 +1,4 @@
 package org.application;
-
 import org.structs.MethodsMenuItem;
 
 public class Main {
