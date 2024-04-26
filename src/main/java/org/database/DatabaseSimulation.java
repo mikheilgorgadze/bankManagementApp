@@ -158,6 +158,7 @@ public class DatabaseSimulation {
     }
 
     public MyArrayList<Role> getRoles(){
+
         return roles;
     }
 
