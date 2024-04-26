@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 
 /out/**
+src/main/java/org/database/DatabaseSetup.java
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
